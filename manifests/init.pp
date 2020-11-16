@@ -50,7 +50,7 @@ class apticron (
   validate_hash($config_file_hash)
   validate_hash($config_file_options_hash)
 
-  $config_file_content = default_content($config_file_string, $config_file_template)
+  $config_file_content = extlib::default_content($config_file_string, $config_file_template)
 
   if $config_file_hash {
     create_resources('apticron::define', $config_file_hash)
