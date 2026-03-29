@@ -2,32 +2,32 @@
 #
 class apticron (
   Enum['absent', 'latest', 'present', 'purged'] $package_ensure = 'present',
-  String $package_name = $::apticron::params::package_name,
-  Array[String] $package_list = $::apticron::params::package_list,
+  String $package_name = $apticron::params::package_name,
+  Array[String] $package_list = $apticron::params::package_list,
 
-  Stdlib::Absolutepath $config_dir_path = $::apticron::params::config_dir_path,
+  Stdlib::Absolutepath $config_dir_path = $apticron::params::config_dir_path,
   Boolean $config_dir_purge = false,
   Boolean $config_dir_recurse = true,
   Optional[String] $config_dir_source = undef,
 
-  Stdlib::Absolutepath $config_file_path = $::apticron::params::config_file_path,
-  String $config_file_owner = $::apticron::params::config_file_owner,
-  String $config_file_group = $::apticron::params::config_file_group,
-  String $config_file_mode = $::apticron::params::config_file_mode,
+  Stdlib::Absolutepath $config_file_path = $apticron::params::config_file_path,
+  String $config_file_owner = $apticron::params::config_file_owner,
+  String $config_file_group = $apticron::params::config_file_group,
+  String $config_file_mode = $apticron::params::config_file_mode,
   Optional[String] $config_file_source = undef,
   Optional[String] $config_file_string = undef,
   Optional[String] $config_file_template = undef,
 
-  String $config_file_require = $::apticron::params::config_file_require,
+  String $config_file_require = $apticron::params::config_file_require,
 
   Hash $config_file_hash = {},
   Hash $config_file_options_hash = {},
 
-  String $email = "apticron@${::domain}",
-  String $email_from = "root@${::fqdn}",
+  String $email = "apticron@${facts['networking']['domain']}",
+  String $email_from = "root@${facts['networking']['fqdn']}",
   String $email_subject = '[apticron] $SYSTEM: $NUM_PACKAGES package update(s)',
   $random = fqdn_rand('60'),
-) inherits ::apticron::params {
+) inherits apticron::params {
 
   $config_file_content = extlib::default_content($config_file_string, $config_file_template)
 
@@ -44,7 +44,7 @@ class apticron (
   }
 
   anchor { 'apticron::begin': } ->
-  class { '::apticron::install': } ->
-  class { '::apticron::config': } ->
+  class { 'apticron::install': } ->
+  class { 'apticron::config': } ->
   anchor { 'apticron::end': }
 }
